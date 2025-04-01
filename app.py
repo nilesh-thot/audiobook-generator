@@ -38,9 +38,8 @@ def audio_generate():
         text=preprocess_text(extract_specific_pages("static/uploads/book.pdf",pages=range(init_page,end_page+1)))
         pipeline=load_pipeline()
         audio,time_taken=generate_audio(text,pipeline)
-        with open("static/audio.wav","wb") as f:
-            f.write(audio)
-            f.close()
+        save_audio(audio)
+        print("Audio file written sucessfully")
         return render_template("play_audio.html",time_taken=time_taken,audio_path="static/audio.wav")
         
         
