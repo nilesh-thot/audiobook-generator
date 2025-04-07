@@ -24,9 +24,9 @@ def extract_and_structure_pymupdf(pdf_path,pages=None):
     full_text_structured = []
     if pages is None:
         pages=range(1,len(doc)+1)  
-    for page_num in [76,77]:
+    for page_num in pages:
         # page_num=14
-        page = doc.load_page(page_num)
+        page = doc.load_page(page_num-1)
         # Extract blocks with detailed info: (x0, y0, x1, y1, "text", block_no, block_type)
         # block_type: 0=text, 1=image
         blocks = page.get_text("blocks")
