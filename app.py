@@ -35,7 +35,8 @@ def audio_generate():
     if request.method=="POST":
         init_page=int(request.form["initial_page"])
         end_page=int(request.form["final_page"])
-        text=preprocess_text(extract_specific_pages("static/uploads/book.pdf",pages=range(init_page,end_page+1)))
+        # text=preprocess_text(extract_specific_pages("static/uploads/book.pdf",pages=range(init_page,end_page+1)))
+        text=extract_and_structure_pymupdf("static/uploads/book.pdf",pages=range(init_page,end_page+1))
         pipeline=load_pipeline()
         audio,time_taken=generate_audio(text,pipeline)
         save_audio(audio)
