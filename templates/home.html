@@ -6,6 +6,15 @@
 
 
 {% block content %}
+<style>
+    body {
+        background-image: url('https://plus.unsplash.com/premium_photo-1661456342021-faa4a2ac84f1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YXVkaW9ib29rfGVufDB8fDB8fHww');
+        background-size: cover;      /* Ensures image covers the entire background */
+        background-repeat: no-repeat; /* Prevents image from repeating */
+        /* background-attachment: fixed; Optional: Makes image fixed during scrolling */
+    }
+</style>
+
 {# This outer container uses Flexbox to center its content vertically and horizontally #}
 {# vh-100 tries to make it full viewport height, works best with flex structure in base.html #}
 {# We remove the default container to control centering better #}
@@ -49,5 +58,3 @@
   </div>
 </footer>
 {% endblock %}
-
-
