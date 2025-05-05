@@ -39,10 +39,9 @@ def audio_generate():
         text=extract_and_structure_pymupdf("static/uploads/book.pdf",pages=range(init_page,end_page+1))
         pipeline=load_pipeline()
         audio,time_taken=generate_audio(text,pipeline)
-        save_audio(audio)
+        audio_path_folder,low_quality_audio_path,high_quality_audio_path=save_audio(audio)
         print("Audio file written sucessfully")
-        return render_template("play_audio.html",time_taken=time_taken,audio_path="static/audio.wav")
-        
+        return render_template("play_audio.html",time_taken=time_taken,low_quality_audio_path=low_quality_audio_path,high_quality_audio_path=high_quality_audio_path)    #"static/audio.flac")
         
 if __name__=="__main__":
     app.run(debug=True)

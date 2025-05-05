@@ -35,9 +35,14 @@ def generate_audio(text,pipeline,voice_option="af_heart",sample_rate=24000):
         # st.error(f"Error generating audio: {str(e)}")
         print(f"Error occured in generating audio:{e}")
         return None
-def save_audio(audio_data,output_path="static/audio.wav",sampling_rate=24000):
-    if os.path.exists(output_path):
-        os.remove(output_path)
-    sf.write(output_path,audio_data,sampling_rate)
+def save_audio(audio_data,output_path="static/",sampling_rate=24000):
+    high_quality_path=output_path+"audio.wav"
+    low_quality_path=output_path+"audio.ogg"
+    if os.path.exists(high_quality_path):
+        os.remove(high_quality_path)
+    if os.path.exists(low_quality_path):
+        os.remove(low_quality_path)
+    sf.write(high_quality_path,audio_data,sampling_rate)
+    sf.write(low_quality_path,audio_data,sampling_rate)
     print("Audio file saved successfully")
-    return output_path
+    return output_path,high_quality_path,low_quality_path
