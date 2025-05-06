@@ -42,6 +42,7 @@ def audio_generate():
         high_quality_audio_path,low_quality_audio_path=save_audio(audio)
         print("Audio file written sucessfully")
         return render_template("play_audio.html",time_taken=time_taken,high_audio_path=high_quality_audio_path,low_audio_path=low_quality_audio_path)
+
         
 if __name__=="__main__":
     app.run(debug=True)

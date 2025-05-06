@@ -37,6 +37,7 @@ def generate_audio(text,pipeline,voice_option="af_heart",sample_rate=24000):
         print(f"Error occured in generating audio:{e}")
         return None
 
+
 def convert_wav_to_mp3(filepath, output_filepath="audio.mp3"):
     """
     Converts a WAV audio file to MP3 format with good compression for smaller file size
@@ -62,3 +63,4 @@ def save_audio(audio_data,output_path="static/audio.wav",sampling_rate=24000):
     convert_wav_to_mp3(output_filepath=output_path,filepath=low_quality_audio_path)
     print("Audio file saved successfully")
     return output_path,low_quality_audio_path
+
