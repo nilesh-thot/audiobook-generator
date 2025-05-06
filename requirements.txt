@@ -7,3 +7,4 @@ PyMuPDF
 numpy
 kokoro>=0.9.2 
 soundfile
+pydub
