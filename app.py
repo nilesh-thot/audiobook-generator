@@ -49,7 +49,7 @@ def upload():
 
         if file and file.filename.endswith(".pdf"):
             # Ensure the target directory exists
-            upload_folder = "static/uploads"
+            upload_folder = "uploads"
             if not os.path.exists(upload_folder):
                 os.makedirs(upload_folder)
 
