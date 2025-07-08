@@ -61,8 +61,8 @@ def convert_wav_to_mp3(input_filepath, output_filepath="audio.mp3"):
         print(f"Error during conversion: {e}")
 
 def save_audio(audio_data,output_path_folder="static/",file_name='audio',sampling_rate=24000):
-    high_quality_audio_path=os.path.join(output_path_folder, "{file_name}.wav")#output_path_folder+"audio.wav"
-    low_quality_audio_path=os.path.join(output_path_folder, "{file_name}.mp3")#output_path_folder+"audio.mp3"
+    high_quality_audio_path=os.path.join(output_path_folder, f"{file_name}.wav")#output_path_folder+"audio.wav"
+    low_quality_audio_path=os.path.join(output_path_folder, f"{file_name}.mp3")#output_path_folder+"audio.mp3"
     if os.path.exists(high_quality_audio_path):
         os.remove(high_quality_audio_path)
     if os.path.exists(low_quality_audio_path):
