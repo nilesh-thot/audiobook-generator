@@ -15,26 +15,26 @@ def load_pipeline(lang_code='a'):
         raise # or return None
 def generate_audio(text,pipeline,voice_option="af_heart",sample_rate=24000):
     try:
-            # Generate audio chunks
-            generator = pipeline(text, voice=voice_option)
-            audio_chunks = []
-            i=0
-            time_start=time.time()
-            for _, _, audio in generator:
-                print(f"Chunk {i+1} completed")
-                i+=1
-                audio_chunks.append(audio)
-            time_end=time.time()
-            if not audio_chunks:
-                print("No audio generated")
-                return None
-            print("Audio generation completed successfully")
-            # Combine audio chunks
-            full_audio = np.concatenate(audio_chunks)
-            
-            
-            # Display results
-            return full_audio,time_end-time_start
+        # Generate audio chunks
+        generator = pipeline(text, voice=voice_option)
+        audio_chunks = []
+        i=0
+        time_start=time.time()
+        for _, _, audio in generator:
+            print(f"Chunk {i+1} completed")
+            i+=1
+            audio_chunks.append(audio)
+        time_end=time.time()
+        if not audio_chunks:
+            print("No audio generated")
+            return None
+        print("Audio generation completed successfully")
+        # Combine audio chunks
+        full_audio = np.concatenate(audio_chunks)
+        
+        
+        # Display results
+        return full_audio,time_end-time_start
                     
                     
     except Exception as e:
@@ -60,9 +60,9 @@ def convert_wav_to_mp3(input_filepath, output_filepath="audio.mp3"):
     except Exception as e:
         print(f"Error during conversion: {e}")
 
-def save_audio(audio_data,output_path_folder="static/",sampling_rate=24000):
-    high_quality_audio_path=os.path.join(output_path_folder, "audio.wav")#output_path_folder+"audio.wav"
-    low_quality_audio_path=os.path.join(output_path_folder, "audio.mp3")#output_path_folder+"audio.mp3"
+def save_audio(audio_data,output_path_folder="static/",filename='audio',sampling_rate=24000):
+    high_quality_audio_path=os.path.join(output_path_folder, "{filename}.wav")#output_path_folder+"audio.wav"
+    low_quality_audio_path=os.path.join(output_path_folder, "{filename}.mp3")#output_path_folder+"audio.mp3"
     if os.path.exists(high_quality_audio_path):
         os.remove(high_quality_audio_path)
     if os.path.exists(low_quality_audio_path):

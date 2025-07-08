@@ -1,4 +1,3 @@
-<!-- templates/display_pdf.html -->
 {% extends "base.html" %}
 
 {% block title %}Select Pages & Generate Audio{% endblock %}
@@ -9,7 +8,7 @@
     {# 1. Centered Heading #}
     <div class="row mb-4"> {# Row for the heading #}
         <div class="col text-center"> {# Column that takes full width and centers text #}
-            <h1>Please select the page numbers to generate audio</h1>
+            <h1>Please select the page numbers and voice to generate audio</h1> {# Modified heading #}
         </div>
     </div>
 
@@ -24,7 +23,8 @@
                     type="application/pdf"
                     {# IMPORTANT: Ensure pdf_path is a web-accessible URL #}
                     {# Usually generated with url_for('static', filename=...) if file is in static folder #}
-                    src="{{ pdf_path }}"
+                    {# Based on your app.py, pdf_path is 'static/uploads/book.pdf' which should work if static folder is served #}
+                    src="{{ url_for('static', filename=pdf_path.split('static/')[1]) if 'static/' in pdf_path else pdf_path }}"
                     width="100%" {# Fill the column width #}
                     height="600px" {# Keep specified height #}
                     alt="PDF Preview"
@@ -39,7 +39,7 @@
         <div class="col-md-5 col-lg-4">
             {# Add some styling to the form area #}
             <div class="form-container border rounded p-4 shadow-sm bg-light">
-                <h5 class="mb-3">Select Page Range:</h5>
+                <h5 class="mb-3">Select Page Range & Voice:</h5> {# Modified heading #}
                 {# Point form to the correct endpoint #}
                 <form action="{{ url_for('audio_generate') }}" method="post">
                     {# Use mb-3 for spacing in Bootstrap 5 instead of form-group #}
@@ -52,6 +52,20 @@
                         <label for="finalPage" class="form-label">To page:</label>
                         <input type="number" class="form-control" id="finalPage" name="final_page" placeholder="End page" value="{{ page_count }}" min="1" max="{{ page_count }}" required> {# Added min/max/required #}
                     </div>
+
+                    {# NEW: Voice Selection Dropdown #}
+                    <div class="mb-3">
+                        <label for="voiceOption" class="form-label">Select Voice:</label>
+                        <select class="form-select" id="voiceOption" name="voice_option" required>
+                            {% for voice in voices %}
+                                <option value="{{ voice.value }}" {% if voice.value == 'af_heart' %}selected{% endif %}>
+                                    {{ voice.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {# END NEW: Voice Selection Dropdown #}
+
                     {# Use d-grid for a full-width button or text-center for centered #}
                     <div class="d-grid gap-2"> {# Makes button full width of its container #}
                          <button type="submit" class="btn btn-primary mt-2">Generate Audio</button>
@@ -67,4 +81,3 @@
 
     </div> {# End Two-Column Row #}
 </div> {# End Main Container #}
-{% endblock %}
