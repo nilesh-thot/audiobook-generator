@@ -5,7 +5,7 @@ from PyPDF2 import PdfReader
 import os
 
 app = Flask(__name__)
-
+BOOK_FILE_NAME='book'
 # Define Voice Options (Based on the image provided)
 # This list will be passed to the template.
 VOICE_OPTIONS = [
@@ -42,6 +42,8 @@ def upload():
             return "No file part in the request.", 400
 
         file = request.files['formFile']
+        global BOOK_FILE_NAME
+        BOOK_FILE_NAME=file.filename[:-4]
 
         if file.filename == '':
             # Handle case where no file is selected
@@ -49,11 +51,11 @@ def upload():
 
         if file and file.filename.endswith(".pdf"):
             # Ensure the target directory exists
-            upload_folder = "uploads"
+            upload_folder = "static/uploads"
             if not os.path.exists(upload_folder):
                 os.makedirs(upload_folder)
-
-            pdf_save_path = os.path.join(upload_folder, "book.pdf")
+        
+            pdf_save_path = os.path.join(upload_folder, file.filename)
 
             if os.path.exists(pdf_save_path):
                 try:
@@ -70,17 +72,9 @@ def upload():
                 print(f"Error reading PDF {pdf_save_path}: {e}")
                 return "Error processing PDF file. Please ensure it's a valid PDF.", 500
 
-            # pdf_path for the template should be relative to the 'static' folder
-            # if src="{{ url_for('static', filename=pdf_path_relative_to_static) }}" is used,
-            # or the direct web path if not.
-            # Given src="{{ pdf_path }}" in original template, and we save to 'static/uploads/book.pdf',
-            # this path should be 'uploads/book.pdf' if template uses url_for('static', filename=pdf_path)
-            # OR 'static/uploads/book.pdf' if the template directly uses src="{{ pdf_path }}" and static is served at root.
-            # The updated display_pdf.html uses url_for, so we pass path relative to static.
-            pdf_display_path_for_template = "uploads/book.pdf"
 
             return render_template('display_pdf.html',
-                                   pdf_path=pdf_display_path_for_template, # Path for url_for('static', ...)
+                                   pdf_path=pdf_save_path, # Path for url_for('static', ...)
                                    page_count=page_count,
                                    voices=VOICE_OPTIONS) # Pass voice options to the template
         else:
@@ -105,7 +99,7 @@ def audio_generate():
         except KeyError:
             return "Missing form data (page numbers or voice option).", 400
 
-        pdf_file_path = "static/uploads/book.pdf"
+        pdf_file_path = f"static/uploads/{BOOK_FILE_NAME}.pdf"
         if not os.path.exists(pdf_file_path):
             return "Uploaded PDF not found. Please re-upload.", 404
 
@@ -127,7 +121,7 @@ def audio_generate():
                 return "Audio generation failed. Check server logs.", 500
 
         except Exception as e:
-            print(f"Error during TTS processing or audio generation: {e}")
+            print(f"Error during TTS processing or auṅdio generation: {e}")
             return f"An error occurred during audio generation: {str(e)}", 500
 
         # Ensure static/uploads directory exists for saving audio
@@ -135,7 +129,7 @@ def audio_generate():
         if not os.path.exists(audio_output_folder):
             os.makedirs(audio_output_folder)
 
-        high_quality_audio_path, low_quality_audio_path = save_audio(audio_data, output_path_folder=audio_output_folder,file_name=f"book part x pg{init_page}-{end_page}")
+        high_quality_audio_path, low_quality_audio_path = save_audio(audio_data, output_path_folder=audio_output_folder,page_numbers=[init_page,end_page],voice_option=selected_voice,book_name=BOOK_FILE_NAME)
 
         print("Audio file written successfully")
 
@@ -146,7 +140,9 @@ def audio_generate():
         return render_template("play_audio.html",
                                time_taken=time_taken,
                                high_audio_path=high_quality_audio_path,
-                               low_audio_path=low_quality_audio_path)
+                               low_audio_path=low_quality_audio_path,
+                               pdf_file_path=pdf_file_path,
+                               )
     return "Invalid request method.", 405 # Should not happen with POST route
 
 if __name__ == "__main__":

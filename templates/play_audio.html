@@ -25,7 +25,7 @@
                     type="application/pdf"
                     {# IMPORTANT: Ensure pdf_path is a web-accessible URL #}
                     {# Usually generated with url_for('static', filename=...) if file is in static folder #}
-                    src="uploads/book.pdf"
+                    src="{{ pdf_file_path }}"
                     width="100%" {# Fill the column width #}
                     height="600px" {# Keep specified height #}
                     alt="PDF Preview"

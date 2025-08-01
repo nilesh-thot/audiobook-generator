@@ -1,4 +1,3 @@
-<!-- templates/display_pdf.html -->
 {% extends "base.html" %}
 
 {% block title %}Select Pages & Generate Audio{% endblock %}
@@ -25,7 +24,7 @@
                     {# IMPORTANT: Ensure pdf_path is a web-accessible URL #}
                     {# Usually generated with url_for('static', filename=...) if file is in static folder #}
                     {# Based on your app.py, pdf_path is 'static/uploads/book.pdf' which should work if static folder is served #}
-                    src="{{ url_for('static', filename=pdf_path.split('static/')[1]) if 'static/' in pdf_path else pdf_path }}"
+                    src="{{ pdf_path }}"
                     width="100%" {# Fill the column width #}
                     height="600px" {# Keep specified height #}
                     alt="PDF Preview"
