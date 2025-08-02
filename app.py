@@ -6,6 +6,8 @@ import os
 
 app = Flask(__name__)
 BOOK_FILE_NAME='book'
+TIME_TAKEN=0
+AUDIO_FILE_NAME='audio'
 # Define Voice Options (Based on the image provided)
 # This list will be passed to the template.
 VOICE_OPTIONS = [
@@ -83,7 +85,7 @@ def upload():
                 <h1>File type not supported! Only PDF files are allowed.</h1>
                 <p><a href="/">Go back</a></p>'''
 
-@app.route("/audio_generate", methods=["POST"])
+@app.route("/audio_generate", methods=["POST","GET"])
 def audio_generate():
     if request.method == "POST":
         try:
@@ -130,20 +132,21 @@ def audio_generate():
             os.makedirs(audio_output_folder)
 
         high_quality_audio_path, low_quality_audio_path = save_audio(audio_data, output_path_folder=audio_output_folder,page_numbers=[init_page,end_page],voice_option=selected_voice,book_name=BOOK_FILE_NAME)
-
+        global AUDIO_FILE_NAME
+        AUDIO_FILE_NAME=high_quality_audio_path[:-4]
+        global TIME_TAKEN
+        TIME_TAKEN=time_taken
         print("Audio file written successfully")
+        
 
-        # For play_audio.html, pass paths relative to static folder for url_for
-        # hq_path_for_template = os.path.relpath(high_quality_audio_path, 'static')
-        # lq_path_for_template = os.path.relpath(low_quality_audio_path, 'static')
 
-        return render_template("play_audio.html",
-                               time_taken=time_taken,
-                               high_audio_path=high_quality_audio_path,
-                               low_audio_path=low_quality_audio_path,
-                               pdf_file_path=pdf_file_path,
-                               )
-    return "Invalid request method.", 405 # Should not happen with POST route
+
+    return render_template("play_audio.html",
+                            time_taken=TIME_TAKEN,
+                            high_audio_path=f"{AUDIO_FILE_NAME}.wav",
+                            low_audio_path=f"{AUDIO_FILE_NAME}.mp3",
+                            pdf_file_path=f"static/uploads/{BOOK_FILE_NAME}.pdf",
+                            )
 
 if __name__ == "__main__":
     # Ensure the static directory and uploads subdirectory exist at startup
